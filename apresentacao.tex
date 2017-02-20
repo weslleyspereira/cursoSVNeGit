@@ -1,0 +1,1034 @@
+\documentclass[a4paper]{beamer}
+
+%\documentclass[handout]{beamer} %% Compile for printing
+
+\usepackage{beamerprosper} %% Pacote padrão do Beamer
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc} \usepackage{lmodern}
+\usepackage[brazil]{babel}
+
+\usepackage{hyperref} %% hyperlinks
+
+\makeatletter
+\newcommand\HREF[2]{\hyper@linkurl{#2}{#1}}
+\makeatother
+
+%%Temas
+\usetheme{CambridgeUS}
+\usecolortheme{seagull}
+%\useoutertheme{infolines}
+%\usefonttheme{serif}
+%\useinnertheme{rectangles}
+%\setbeamercolor{frametitle}{fg=blue}
+
+%%Informações para o arquivo PDF
+\hypersetup{
+	pdftitle={MC-A10 .Sistemas de controle de versão - SVN e Git},
+	pdfauthor={Weslley da Silva Pereira},
+	pdfsubject={15º Programa de Verão do LNCC},
+	pdfkeywords={Controle de versão, SVN, Git},
+}
+
+%%Configurações do slide inicial
+\title[Sistemas de controle de versão]{
+	\large{Sistemas de controle de versão - SVN e Git}
+}
+
+\subtitle{15º Programa de Verão do LNCC}
+
+\author{Weslley da Silva Pereira}
+
+\institute[LNCC]{Laboratório Nacional de Computação Científica}
+
+\date[Verão LNCC 2017]{20 a 23 de Fevereiro de 2017}
+
+%\titlegraphic{
+%	\includegraphics[height=40pt]{img/logo_matematica}%
+%	\hspace*{120pt}~%
+%	\includegraphics[height=40pt]{img/logoUFJF}
+%}
+
+\begin{document}
+
+%%Primeiro slide
+\begin{frame}
+\titlepage
+\end{frame}
+
+%%Apresentação e motivação
+\begin{frame}{Apresentação e motivação}
+
+\begin{minipage}{.15\textwidth}
+\centering
+\includegraphics[width=\textwidth]{img/eu.JPG}
+\end{minipage}
+\hfill
+\begin{minipage}{.8\textwidth}
+
+Formação acadêmica:
+\begin{itemize}
+\item Graduado em Engenharia Computacional e Ciência da Computação na UFJF.
+\item Mestre em Matemática Pura na UFJF.
+\item Doutorando em Modelagem Computacional no LNCC.
+\end{itemize}
+\pause
+
+\vspace{10pt}
+Experiência com controle de versão:
+\begin{itemize}
+\item Curso de Tortoise SVN na graduação.\pause
+\item Problemas com o versionamento no mestrado.\pause
+\item Uso do SVN no projeto de pesquisa.\pause
+\item Segunda edição do curso!
+\end{itemize}
+
+\end{minipage}
+
+\end{frame}
+
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+\begin{frame}{Links importantes para o curso}
+
+Sites:
+\begin{itemize}
+\item \url{https://git-scm.com/}
+\item \url{https://git-scm.com/book/en/v2}
+\item \url{https://github.com/}
+\item \url{https://subversion.apache.org/}
+\item \url{http://svnbook.red-bean.com/}
+\item \url{https://riouxsvn.com/}
+\item \url{http://rabbitvcs.org/}
+\end{itemize}
+
+\vspace{20pt}
+Slides no ResearchGate:\\ \url{https://www.researchgate.net/profile/Weslley_Pereira2}
+
+\end{frame}
+
+\section{Sistemas de controle de versão}
+
+\begin{frame}{Controle de versão}
+
+Controle de versão é um sistema que guarda o histórico temporal de modificações de um conjunto de arquivos.
+
+\begin{itemize}
+\item Possibilita o acesso a versões passadas dos arquivos.
+\item Componente da \textbf{Gerência de Configuração de Software} da Engenharia de Software.
+\item O termo \textbf{revisão}, precedido por um número, também é utilizado para identificar a versão da modificação.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Sistemas de controle de versão}
+
+\begin{itemize}
+\item Sistema de controle de versão é um software que permite gerenciar o processo de versionamento de arquivos.
+\item Exemplos de funcionalidades: reverter arquivos ou um conjunto de arquivos a um estado anterior; permitir comparação entre versões; guardar informações sobre a modificação (autor, máquina, data, horário).
+\item Exemplos gratuitos: CVS, Mercurial, Git e SVN.
+\item Exemplos comerciais: SourceSafe e TFS.
+\end{itemize}
+\pause
+
+\begin{block}{}
+Outros tipos de software também possuem módulos de controle de versão. Os sistemas de armazenamento em nuvem Dropbox e Google Drive são exemplos.
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Controle de versão do Dropbox}
+\includegraphics[width=\linewidth]{img/dropboxVersion}
+\end{frame}
+
+\begin{frame}{Controle de versão do Dropbox}
+\includegraphics[width=\linewidth]{img/dropboxConflict}
+\end{frame}
+
+\begin{frame}{Controle de versão do Google Drive}
+\includegraphics[width=\linewidth]{img/driveVersion}
+\end{frame}
+
+\begin{frame}{Controle de versão do Google Drive}
+\includegraphics[width=\linewidth]{img/driveOtherFiles}
+\end{frame}
+
+\begin{frame}{Por que utilizar?}
+
+\begin{itemize}
+\item Facilita trabalho em equipe em um projeto de software.
+\item Facilita a identificação de bugs.
+\end{itemize}
+
+\pause
+\begin{block}{}
+``Suppose we have two coworkers, Harry and Sally. They each decide to edit the same repository file at the same time. If Harry saves his changes to the repository first, it's possible that (a few moments later) Sally could accidentally overwrite them with her own new version of the file. While Harry's version of the file won't be lost forever (because the system remembers every change), any changes Harry made won't be present in Sally's newer version of the file, because she never saw Harry's changes to begin with. Harry's work is still effectively lost—or at least missing from the latest version of the file—and probably by accident. This is definitely a situation we want to avoid!'' \cite{svnBook}.
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Problema}
+\begin{center}
+\includegraphics[height=200pt]{img/problemToAvoid}
+\hspace{5pt}
+{\scriptsize Fonte: \cite{svnBook}}
+\end{center}
+\end{frame}
+
+\begin{frame}{Solução com \textit{lock}}
+\begin{center}
+\includegraphics[height=200pt]{img/lockSolution}
+\hspace{5pt}
+{\scriptsize Fonte: \cite{svnBook}}
+\end{center}
+\end{frame}
+
+\begin{frame}{Solução \textit{copy-modify-merge}}
+\begin{center}
+\includegraphics[height=200pt]{img/svnSolution}
+\hspace{5pt}
+{\scriptsize Fonte: \cite{svnBook}}
+\end{center}
+\end{frame}
+
+\begin{frame}{Solução \textit{copy-modify-merge}}
+\begin{center}
+\includegraphics[height=200pt]{img/svnSolution2}
+\hspace{5pt}
+{\scriptsize Fonte: \cite{svnBook}}
+\end{center}
+\end{frame}
+
+\begin{frame}{Conceitos básicos}
+
+\textbf{Repositório} é um local que guarda todos os dados e meta-dados de um projeto sob controle de versão.
+
+\begin{itemize}
+\item Normalmente organizado numa hierarquia de arquivos e pastas.
+\item Clientes se conectam a um repositório para ler ou gravar arquivos.
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=.3\linewidth]{img/repository}
+\hspace{5pt}
+{\scriptsize Fonte: \cite{svnBook}}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Conceitos básicos}
+
+\textbf{Banco de dados} do projeto é a estrutura que guarda, de maneira organizada, as versões de todos os arquivos.
+\begin{itemize}
+\item Sempre está alocado em um repositório.
+\end{itemize}
+\pause
+
+Para que os clientes trabalhem com um arquivo do repositório, é necessário que possuam uma \textbf{cópia local} (\textit{working copy}) do mesmo.
+\begin{itemize}
+\item Cada cliente pode trabalhar com suas cópias locais independentemente do que acontece no repositório.
+\item Cópias locais podem ser criadas a partir de qualquer versão de um arquivo.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Conceitos básicos}
+
+\includegraphics[width=\textwidth]{img/branch}\\
+\begin{center}
+{\scriptsize Fonte: \url{https://en.wikipedia.org/wiki/apache\_subversion}}
+\end{center}
+
+Um conjunto de arquivos sob controle de versão pode ser separado em \textbf{branches}. Cada \textbf{branch} corresponde a uma linha de desenvolvimento independente.
+\pause
+
+O \textbf{trunk} é a linha principal de desenvolvimento do projeto. Pode ser entendido como o branch principal.
+
+\pause
+As \textbf{tags} são utilizadas para identificar versões específicas do projeto.
+
+\end{frame}
+
+\begin{frame}{Sistemas de controle de versão locais}
+\begin{center}
+\includegraphics[height=200pt]{img/localVCS}
+\hspace{5pt}
+{\scriptsize Fonte: \cite{proGit}}
+\end{center}
+\end{frame}
+
+\begin{frame}{Sistemas de controle de versão centralizados}
+\begin{center}
+\includegraphics[height=200pt]{img/centralizedVCS}
+\hspace{5pt}
+{\scriptsize Fonte: \cite{proGit}}
+\end{center}\end{frame}
+
+\begin{frame}{Sistemas de controle de versão distribuídos}
+\begin{center}
+\includegraphics[height=200pt]{img/distributedVCS}
+\hspace{5pt}
+{\scriptsize Fonte: \cite{proGit}}
+\end{center}
+\end{frame}
+
+\begin{frame}{Comandos básicos}
+\begin{itemize}[<+->]
+
+\item \textit{help}: exibe o menu de ajuda.
+
+\item \textit{add}: adiciona itens do diretório de trabalho local ao projeto.
+
+\item \textit{remove (rm)}: remove itens do diretório local e do controle de versão.
+
+\item \textit{move (mv)}: move ou renomeia itens do diretório local.
+
+\item \textit{checkout}: transfere revisões do repositório para o diretório de trabalho.
+
+\item \textit{commit}: grava alterações locais no repositório.
+
+\item \textit{diff}: compara um arquivo em revisões distintas.
+
+\item \textit{merge}: mescla duas alterações feitas em um mesmo arquivo.
+
+\item \textit{status}: mostra o estado atual de modificações no diretório local de trabalho.
+
+\end{itemize}
+\end{frame}
+
+\section{Git}
+
+\subsection{Introdução}
+
+\begin{frame}{Git}
+
+\begin{itemize}
+\item É um sistema de controle de versão distribuído.
+\item Criado em 2005 pelos desenvolvedores do kernel Linux (e, em particular, por Linus Torvalds, criador do Linux).
+\end{itemize}
+
+\vspace{20pt}
+\begin{center}
+\includegraphics[width=.5\linewidth]{img/logoGit}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Git}
+
+Atributos enfatizados no desenvolvimento inicial do Git:
+\begin{itemize}
+\item Velocidade de execução;
+\item Design simples;
+\item Suporte ao desenvolvimento altamente não-linear;
+\item Totalmente distribuído;
+\item Capacidade de lidar eficientemente com grandes projetos, como o kernel Linux.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Git}
+
+Atributos enfatizados no desenvolvimento inicial do Git:
+\begin{itemize}
+\item \textbf{Velocidade de execução};
+\item Design simples;
+\item \textbf{Suporte ao desenvolvimento altamente não-linear};
+\item Totalmente distribuído;
+\item \textbf{Capacidade de lidar eficientemente com grandes projetos, como o kernel Linux}.
+\end{itemize}
+
+\end{frame}
+
+\subsection{tryGit}
+
+\begin{frame}{tryGit}
+
+Vamos botar a mão na massa?
+\begin{center}
+\url{http://try.github.com/}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.5\linewidth]{img/try-git}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Os três estágios}
+
+Git trabalha com três estágios:
+\begin{itemize}
+\item \textit{commited} (enviado): arquivo gravado no repositório.
+\item \textit{modified} (modificado): arquivo modificado mas não salvo no repositório.
+\item \textit{staged} (preparado): arquivo modificado que foi marcado para o próximo envio ao repositório.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Os três estágios}
+\begin{center}
+\includegraphics[width=\linewidth]{img/git3stages}\\
+{\scriptsize Fonte: \cite{proGit}}
+\end{center}
+\end{frame}
+
+\begin{frame}{Características}
+
+\begin{itemize}[<+->]
+\item Quase todas as operações são locais. Isto inclui submeter arquivos para o repositório e obter um arquivo em versão passada, por exemplo.
+\item Git preserva integridade dos dados através de códigos de \textit{checksum}. Ex.:
+\begin{center}
+24b9da6552252987aa493b52f8696cd6d3b00373
+\end{center}
+Utilizado inclusive para identificar arquivos no banco de dados.
+\item Operações geralmente apenas adicionam dados ao banco de dados do projeto.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Características}
+
+\begin{itemize}
+\item Git armazena versões de arquivos salvando cópias dos mesmos.
+\item Se arquivos não são modificados entre uma versão e outra, links são criados em vez de cópias de arquivos.
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=\linewidth]{img/gitFiles}\\
+{\scriptsize Fonte: \cite{proGit}}
+\end{center}
+
+\end{frame}
+
+\subsection{Configurando o Git}
+
+\begin{frame}{Como usar o Git?}
+
+Utilização:
+\begin{itemize}
+\item Linha de comando: possibilita a utilização de todos os comandos do Git.
+\item Interface gráfica: ferramentas livres disponíveis para as plataformas Windows, Mac e Linux (ver \url{https://git-scm.com/downloads/guis}). Ex.: RabbitVCS.
+\end{itemize}
+
+\begin{center}
+\href{http://rabbitvcs.org/}{\includegraphics[width=.15\linewidth]{img/RabbitVCS.pdf}}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Instalação e configuração do Git}
+
+Instruções para instalação do Git podem ser encontradas em \cite{proGit}.
+\pause
+
+\vspace{10pt}
+O comando \textbf{git config} atribui e consulta as variáveis de configuração.
+
+\vspace{10pt}
+No linux, um repositório Git atende a três arquivos de configuração:
+\begin{enumerate}[<+->]
+\item \textbf{/etc/gitconfig}: arquivo de configurações do sistema e todos os repositórios. (opção \textbf{-{}-system})
+\item \textbf{\textasciitilde /.gitconfig} ou \textbf{\textasciitilde /.config/git/config}: arquivo de configurações do usuário. (opção \textbf{-{}-global})
+\item \textbf{.git/config}: arquivo de configurações do repositório.
+\end{enumerate}
+
+\vspace{10pt}
+Cada nível sobrescreve as configurações do anterior se nenhuma opção for passada.
+
+\end{frame}
+
+\begin{frame}{Instalação e configuração do Git}
+
+Para que os \textbf{commits} possam ser realizados em um projeto, o nome e email do usuário devem ser definidos em um dos arquivos de configuração.
+
+\begin{block}{Sugestão}
+Ao instalar o Git na sua máquina, defina nome e email no arquivo de configurações do usuário. Comandos:\\
+\textbf{git config -{}-global user.name [meu\_nome]}\\
+\textbf{git config -{}-global user.email [meu\_email]}
+\end{block}
+\pause
+
+\vspace{10pt}
+O próximo passo é configurar o editor de texto.\\
+\textbf{git config -{}-global core.editor [editor]}
+
+\end{frame}
+
+\begin{frame}{Instalação e configuração do Git}
+
+Para checar as configurações:\\
+\textbf{git config -{}-list}
+\pause
+
+\vspace{10pt}
+A ajuda do Git é aciona através de um dos comandos:\\
+\textbf{git help <comando>}\\
+\textbf{git <comando> -{}-help}\\
+\textbf{man git-<comando>}
+\pause
+
+\vspace{10pt}
+Vamos testar!
+\begin{enumerate}
+\item Abra o terminal com \textbf{CTRL+Alt+T}.
+\item Teste os comandos acima.
+\item Tente criar um repositório, como feito no TryGit.
+\item Use o \textbf{git config -{}-list} dentro do repositório.
+\end{enumerate}
+
+\end{frame}
+
+\subsection{GitHub}
+
+\begin{frame}{GitHub}
+
+É um serviço de hospedagem de repositórios Git, e muito mais!
+
+\begin{itemize}
+\item Interface web gráfica.
+\item Fóruns de discussões.
+\item Ferramentas de gerenciamento de projeto.
+\end{itemize}
+
+\begin{center}
+\href{https://github.com/}{\includegraphics[width=.5\linewidth]{img/get-e-github}}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{GitHub}
+
+É um serviço de hospedagem de repositórios Git, e muito mais!
+
+\begin{itemize}
+\item Contribuição com projetos existentes.
+\item Colaboração em equipes de desenvolvimento.
+\item Ferramentas adicionais: \href{https://gist.github.com/}{GitHub Gist}, \href{https://desktop.github.com/}{GitHub Desktop}.
+\end{itemize}
+
+\begin{center}
+\href{https://github.com/}{\includegraphics[width=.5\linewidth]{img/get-e-github}}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Contribuindo com projetos no GitHub}
+
+Vamos propor uma contribuição ao repositório Spoon-Knife:
+\begin{center}
+\url{https://github.com/octocat/Spoon-Knife}
+\end{center}
+
+\begin{enumerate}
+\item Clique em \textbf{Fork}, para copiar o repositório.
+\item Encontre sua cópia do repositório Spoon-Knife.
+\item Copie a URL do repositório.
+\item Abra o terminal com \textbf{CTRL+Alt+T} e use o comando \textbf{git clone} para clonar seu repositório Spoon-Knife.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Contribuindo com projetos no GitHub}
+
+Alguns comandos úteis no terminal:
+\begin{itemize}
+\item Para saber seu diretório atual, use \textbf{pwd}.
+\item Para visualizar os arquivos do diretório atual, use \textbf{ls}.
+\item Para entrar em um diretório, digite \textbf{cd} seguido do nome do diretório.
+\item Para sair do diretório atual, utilize o comando \textbf{cd ..}
+\end{itemize}
+
+\pause
+\vspace{5pt}
+\begin{enumerate}
+\item Entre no diretório \textbf{Spoon-Knife}.
+\item Verifique a configuração do diretório remoto com o comando \textbf{git remote -v}.
+\item Associe o repositório principal \textbf{Spoon-Knife} ao nome \textbf{upstream}. Utilize o comando \textbf{git remote add upstream https://github.com/octocat/Spoon-Knife.git}.
+\item Verifique novamente as configurações de repositórios remotos.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Contribuindo com projetos no GitHub}
+
+\begin{enumerate}
+\item Edite o arquivo \textbf{index.html}
+\item Faça com que este arquivo entre na \textit{Staging Area} (preparado para envio ao repositório).
+\item Envie as modificações ao seu repositório local.
+\item Envie as modificações ao seu repositório remoto.
+\end{enumerate}
+
+\begin{block}{Dica}
+Utilize os comandos do tutorial \textbf{tryGit} e fique atento às dicas que o próprio Git fornece no comando \textbf{git status}.
+\end{block}
+
+\pause
+\begin{center}
+Vamos criar um \textbf{pull request}!
+\end{center}
+
+\end{frame}
+
+\section{Subversion (SVN)}
+
+\subsection{Introdução}
+
+\begin{frame}{Subversion (SVN)}
+
+\begin{itemize}
+\item Subversion (ou SVN) é um sistema de controle de versão centralizado.
+\item Começou a ser desenvolvido em 2000, com o objetivo de criar um sistema para substituir o Concurrent Versions System (CVS).
+\item Em 2010, o sistema Subversion recebeu o nome de ``Apache Subversion'' pela integração do projeto com a Apache Software Foundation (ASF).
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=.3\linewidth]{img/subversion_logo}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Características}
+
+\begin{itemize}
+\item SVN armazena versões de arquivos salvando as mudanças que ocorreram desde a última versão.
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=\linewidth]{img/svnFiles}\\
+{\scriptsize Fonte: \cite{proGit}}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Características}
+
+\begin{itemize}[<+->]
+\item Transações são atômicas.
+\item Cada \textit{commit} gera uma revisão que é numerada em ordem crescente.
+\item Cada revisão possui sua estrutura de arquivos.
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=.65\linewidth]{img/svnRevisions}
+\hspace{5pt}
+{\scriptsize Fonte: \cite{svnBook}}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Características}
+
+\begin{itemize}[<+->]
+%\item O SVN usa URLs para identificar versões de arquivos no repositório. Ex.:
+%\begin{center}
+%http://svn.example.com/svn/project\\
+%file:///var/svn/repos
+%\end{center}
+\item Cada diretório na raiz do repositório guarda um projeto.
+\item Diretórios .svn (ou \_svn) guardam os arquivos de configuração de cada projeto.
+\item Uma cópia de trabalho local no SVN é uma estrutura completa de diretórios e arquivos.
+\item Uma cópia de arquivo local é um arquivo da cópia de trabalho local.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Características}
+
+Existem 4 estados em que um arquivo de trabalho local pode estar. Estes estados alteram os comandos \textbf{svn commit} e \textbf{svn update}.
+
+\pause
+\begin{itemize}[<+->]
+\item Não modificado e atual.
+\item Modificado e atual.
+\item Não modificado e desatualizado.
+\item Modificado e desatualizado.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Revisões mistas}
+
+\begin{itemize}[<+->]
+\item \textit{Commits} e \textit{updates} são separados.
+\item O número da revisão é associado à estrutura inteira de diretórios. Apesar disso, cópias de trabalho mistas são permitidas.
+\item Para saber a revisão dos arquivos e da cópia local: \textbf{svn info <arquivo>}.
+\item É proibida a deleção de cópias de arquivos desatualizadas.
+\item A operação de \textit{merge} também é proibida em cópias locais com revisão mista (a partir do Subversion 1.7).
+\end{itemize}
+
+\end{frame}
+
+%\begin{frame}{Sobre o comando \textbf{svn diff}}
+%
+%\end{frame}
+
+\begin{frame}{Organização de um repositório SVN}
+
+\begin{center}
+\includegraphics[height=200pt]{img/repositorioSVN}
+\end{center}
+
+\end{frame}
+
+%\begin{frame}{Criando um repositório}
+%svnadmin
+%\end{frame}
+
+\subsection{RiouxSVN}
+
+\begin{frame}{RiouxSVN}
+
+É um serviço gratuito de hospedagem de repositórios SVN.
+
+\begin{itemize}
+\item Repositórios privados por padrão.
+\item Permite colaboração entre usuários.
+\item Plano básico é extensível a partir de doações.
+\end{itemize}
+
+Vamos começar a trabalhar em equipe!
+\begin{center}
+\url{https://riouxsvn.com/}
+\end{center}
+
+\begin{block}{Dica}
+Utilize o comando \textbf{svn status} com frequência para saber como está sua cópia local. Os comandos \textbf{svn info} e \textbf{svn log} também ajudam a ter o controle do que está sendo feito.
+\end{block}
+
+\end{frame}
+
+\subsection{Clientes gráficos}
+
+\begin{frame}{Clientes gráficos}
+
+\begin{center}
+\href{https://tortoisesvn.net/}{\includegraphics[height=60pt]{img/tortoisesvn.png}}
+\hspace{20pt}
+\href{http://rabbitvcs.org/}{\includegraphics[height=60pt]{img/rabbitvcs.png}}
+\end{center}
+\pause
+
+\vspace{10pt}
+Sobre o RabbitVCS:
+\begin{itemize}
+\item Cliente gráfico para SVN e Git integrado ao Nautilus (Linux) e Finder (MAC OS).
+\item Inspirado no TortoiseSVN (Windows).
+\end{itemize}
+\pause
+
+\vspace{10pt}
+Vamos aprender mais na prática!
+
+\end{frame}
+
+\subsection{Exercícios}
+
+\begin{frame}{Exercício 1 - Resolvendo conflitos}
+
+Criando um repositório no RiouxSVN.
+\begin{enumerate}
+\item Na aba \textbf{Repositories}, clique em \textbf{Create new repository...}.
+\item O campo \textbf{Repository Name} é um identificador, portanto tem limitação de caracteres. Prefira utilizar apenas letras, números e '\_'.
+\item Não marque a caixa \textbf{Create trunk, branches and tags directories}
+\end{enumerate}
+
+\pause
+\vspace{10pt}
+Criando cópia local.
+\begin{enumerate}
+\item No diretório \textbf{home} do linux crie um novo diretório com o seu nome.
+\item Abra o terminal e vá para o diretório criado.
+\item Utilize o comando \textbf{svn info} para obter informações do repositório.
+\item Faça o checkout do seu repositório usando o comando \textbf{svn checkout}.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Exercício 1}
+
+Adicionando um arquivo ao projeto.
+\begin{enumerate}
+\item Crie um arquivo de texto \textbf{teste.txt} no diretório do projeto com o texto: "Oi Mundo!".
+\item Verifique o status do arquivo no svn.
+\item Adicione o arquivo ao controle de versão do svn com o comando \textbf{svn add}.
+\item Utilize o comando \textbf{svn commit} para enviar seu arquivo para o repositório.
+\item Compare a revisão do arquivo com a revisão da cópia local.
+\end{enumerate}
+
+\pause
+\vspace{10pt}
+Movendo o arquivo.
+\begin{enumerate}
+\item Crie um diretório \textbf{novo} na cópia local usando o comando \textbf{svn mkdir}.
+\item Mova o arquivo \textbf{teste.txt} para o diretório usando o comando \textbf{svn mv}. 
+\item Renomeie o arquivo \textbf{teste.txt} para \textbf{helloWorld.txt} com o mesmo comando do item anterior.
+\item Verifique as modificações feitas.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Exercício 1}
+
+Criando nova cópia local.
+\begin{enumerate}
+\item Crie uma pasta \textbf{novo\_usuario} no diretório \textbf{home}.
+\item Faça um novo checkout do repositório na pasta \textbf{novo\_usuario}.
+\item Compare os números de revisão entre os dois repositórios.
+\item Troque uma letra no arquivo \textbf{helloWorld.txt} e envie a cópia local para o repositório.
+\end{enumerate}
+
+\pause
+\vspace{10pt}
+Gerando conflito.
+\begin{enumerate}
+\item Na cópia local que está na pasta com o seu nome, altere o '!' em \textbf{helloWorld.txt}.
+\item Tente fazer a operação \textbf{svn commit} (não deveria funcionar).
+\item Utilize o comando \textbf{svn update} para tentar obter a versão atual do \textbf{helloWorld.txt}.
+\item Escolha a opção \textbf{p} e dê uma olhada no seu diretório \textbf{novo}.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Exercício 1}
+
+\begin{itemize}
+\item Neste momento, seu diretório \textbf{novo} possui alguns arquivos a mais.
+\item Abra os arquivos e verifique as diferentes frases que aparecem. Dois desses arquivos são de revisões salvas no repositório, um deles apresenta sua cópia local antes do comando \textbf{svn update} e o último é um arquivo que apresenta o conflito.
+\end{itemize}
+
+\pause
+\vspace{10pt}
+Resolvendo o conflito.
+\begin{enumerate}
+\item Verifique que há um conflito com o \textbf{svn status}.
+\item Utilize o comando \textbf{svn resolve} e observe as opções. (A opção \textbf{s} mostra uma menu de ajuda, além de outras opções)
+\item Verifique as diferenças entre as versões digitando \textbf{df}.
+\item Escolha a opção \textbf{m}.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Exercício 1}
+
+Continuando com a resolução do conflito.
+\begin{itemize}
+\item Existem vários tipos de merge disponíveis.
+\item Como este é um caso simples, apenas escolha entre opção \textbf{1} e \textbf{2}.
+\item Após isso, é necessário marcar o conflito como resolvido com a opção \textbf{r}.
+\item Agora pode realizar o commit de suas modificações.
+\end{itemize}
+
+\pause
+\vspace{10pt}
+Deletando arquivo.
+\begin{enumerate}
+\item Utilize o comando \textbf{svn update}.
+\item Utilize o comando \textbf{svn rm} para remover o arquivo \textbf{helloWorld.txt}.
+\item Envie as mudanças ao repositório.
+\end{enumerate}
+
+\pause
+Mas... e agora? Acho que vou precisar daquele arquivo novamente...
+
+\end{frame}
+
+\begin{frame}{Exercício 1}
+
+Encontrando o arquivo deletado. Neste caso, pode ser feito de diferentes maneiras:
+\begin{itemize}
+\item Revertendo o arquivo à revisão anterior com o comando \textbf{svn update [caminho do arquivo] -r [número da revisão]}.
+\item Revertendo a cópia local à revisão anterior com o comando \textbf{svn update -r [número da revisão]}.
+\item Fazendo um checkout na revisão anterior com o comando \textbf{svn checkout [url do repositório]@[numero da revisão]}.
+\item Se o arquivo ainda não tivesse sido enviado ao repositório, o comando \textbf{svn revert [caminho do arquivo]} resolveria o problema.
+\end{itemize}
+
+\pause
+\vspace{10pt}
+Visualize o log das operações no comando \textbf{svn log}.
+
+\end{frame}
+
+\begin{frame}{Resposta local X Resposta do repositório}
+
+O SVN retorna respostas locais para alguns comandos, que dizem respeito à revisão que está na cópia de trabalho local. Ex.: \textbf{svn diff}, \textbf{svn info} e \textbf{svn status}.
+
+Para comparar com revisões do repositório:
+\begin{itemize}
+\item \textbf{svn diff -r [revisão]} (Use \textbf{HEAD} para a última revisão).
+\item \textbf{svn info -r [revisão]}
+\item \textbf{svn status -{}-show-updates}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Exercício 2 - Trabalhando em equipe}
+
+\begin{itemize}[<+->]
+\item Vamos adicionar todos os nossos usuários ao repositório \textbf{eamc\_svn\_repo}.
+\item Vamos fazer o checkout de uma cópia do diretório \textbf{project1} repositório. Verifique o que há no projeto: arquivos, estrutura de diretórios, log, número de revisão, etc.
+\item Agora faça o checkout da revisão 10 do projeto e cheque novamente a estrutura. Algo novo?
+\item Volte para a revisão atual do projeto.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Exercício 2}
+
+\begin{itemize}
+\item Se organizem em duplas. Cada dupla precisa de dois computadores.
+\item Cada dupla deve escolher um arquivo \textbf{cancao\_do\_exilio} para fazer a correção. Observe que o arquivo está com um erro básico.
+\item Cada membro da dupla irá corrigir uma parte do arquivo.
+\item Para isso, criaremos um branch para correção de erros.
+\end{itemize}
+
+\pause
+\vspace{10pt}
+Criando o branch para correção de erros no repositório.
+\begin{verbatim}
+svn copy
+https://svn.riouxsvn.com/eamc_svn_repo/project1/trunk
+https://svn.riouxsvn.com/eamc_svn_repo/project1/
+  branches/bug-dupla[N] -m "Branch para correção dos acentos"
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}{Exercício 2}
+
+Fazendo as correções.
+\begin{itemize}
+\item Cada membro da dupla faz o checkout do branch criado na pasta \textbf{branches}.
+\item Façam as correções e façam o commit do branch para o servidor.
+\end{itemize}
+
+\pause
+\begin{block}{}
+Observe que cada checkout corresponde a uma nova cópia de trabalho local.
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Exercício 2}
+
+Voltando ao trunk.
+\begin{itemize}
+\item Ainda no ambiente de trabalho do branch, faça o merge  com o trunk e corrija possíveis conflitos.
+\begin{verbatim}
+svn merge ^/calc/trunk
+\end{verbatim}
+\item Caso sua dupla tenha feito algum commit, é necessário fazer o update do branch antes da etapa anterior. Caso isso aconteça, o \textbf{svn} irá notificá-lo.
+\end{itemize}
+
+\pause
+Em apenas um dos computadores:
+\begin{itemize}
+\item Façam o merge final com o trunk e o commit para o repositório, dizendo "Correções prontas!".
+\item Voltem ao diretório de trabalho do trunk e façam o update.
+\item Realizem o merge do branch de erro em direção ao trunk.
+\begin{verbatim}
+svn merge -{}-reintegrate ^/calc/branches/bug-dupla[N]
+\end{verbatim}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Exercício 2}
+
+Em apenas um dos computadores:
+\begin{itemize}
+\item Faça o commit das mudanças, após verificar que não existem erros.
+\item Como o branch de correção já não é mais útil, podemos deletá-lo com o comando \textbf{svn delete}.
+\end{itemize}
+
+\end{frame}
+
+%\begin{frame}[fragile]{Exemplo}
+%\begin{columns}[l]
+%
+%\column{.3\textwidth}
+%
+%\includegraphics[width=\textwidth, clip, trim={0 110pt 0 0}]{img/svnExemplo}
+%
+%\column{.7\textwidth}
+%
+%\begin{enumerate}[<+->]
+%\item Diretório vazio.
+%\begin{verbatim}
+%$ ls -A
+%$
+%\end{verbatim}
+%\item Criando cópia local do projeto Calc.
+%\begin{verbatim}
+%$ svn checkout
+%   http://svn.example.com/repos/calc
+%A calc/Makefile
+%A calc/integer.c
+%A calc/button.c
+%Checked out revision 56.
+%$ ls -A calc
+%Makefile button.c integer.c .svn/
+%$
+%\end{verbatim}
+%\end{enumerate}
+%
+%\end{columns}
+%\end{frame}
+%
+%\begin{frame}[fragile]{Exemplo}
+%\begin{columns}[l]
+%
+%\column{.3\textwidth}
+%
+%\includegraphics[width=\textwidth, clip, trim={0 110pt 0 0}]{img/svnExemplo}
+%
+%\column{.7\textwidth}
+%
+%\begin{enumerate}[<+->]
+%\item Enviando arquivo \textbf{button.c} para o repositório após alterações locais.
+%\begin{verbatim}
+%$ svn commit button.c -m "Fixed a typo in button.c."
+%Sending
+%button.c
+%Transmitting file data .
+%Committed revision 57.
+%$
+%\end{verbatim}
+%\item Criando cópia local do projeto Calc.
+%\begin{verbatim}
+%$ svn update
+%Updating '.':
+%U
+%button.c
+%Updated to revision 57.
+%$
+%\end{verbatim}
+%\end{enumerate}
+%
+%\end{columns}
+%\end{frame}
+
+\section{Principais referências}
+
+\begin{frame}{Principais referências}
+	
+\bibliographystyle{plain}
+\bibliography{ref}
+	
+\end{frame}
+
+\begin{frame}
+
+\begin{center}
+	\textbf{\Huge Obrigado a todos pela atenção!}
+\end{center}
+
+\vspace{30pt}
+\begin{center}
+	Agradeço também à mestranda Letícia Fonseca, pela colaboração na elaboração deste minicurso.
+\end{center}
+
+\end{frame}
+
+\end{document}

@@ -1,0 +1,13 @@
+\begin{thebibliography}{1}
+
+\bibitem{proGit}
+Scott Chacon and Ben Straub.
+\newblock {\em Pro Git}.
+\newblock Apress, 2 edition, 2014.
+
+\bibitem{svnBook}
+Ben Collins-Sussman, Brian~W. Fitzpatrick, and C.~Michael Pilato.
+\newblock Version control with subversion: For subversion 1.7 (compiled from
+  r5067).
+
+\end{thebibliography}
