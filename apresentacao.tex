@@ -402,6 +402,22 @@ Vamos botar a mão na massa?
 
 \end{frame}
 
+\begin{frame}{tryGit}
+
+\begin{itemize}
+\item É uma boa prática nomear o repositório principal como 'origin'. O repositório local é o 'master'\pause
+\item 'git checkout' é usado para trocar o branch apontado por HEAD.\pause
+\item 'git stash' serve para guardar alterações locais antes de um 'git pull' ou 'git checkout' por exemplo.\pause
+\item 'git remote -v' mostra seus repositórios remotos.\pause
+\item O ponteiro HEAD aponta para a revisão atual de trabalho.\pause
+\end{itemize}
+
+\begin{center}
+Vamos dar uma olhada no diretório '.git'?
+\end{center}
+
+\end{frame}
+
 \subsection{Configurando o Git}
 
 \begin{frame}{Como usar o Git?}
@@ -532,6 +548,7 @@ Vamos propor uma contribuição ao repositório Spoon-Knife:
 
 \begin{frame}{Contribuindo com projetos no GitHub}
 
+\begin{block}{}
 Alguns comandos úteis no terminal:
 \begin{itemize}
 \item Para saber seu diretório atual, use \textbf{pwd}.
@@ -539,9 +556,9 @@ Alguns comandos úteis no terminal:
 \item Para entrar em um diretório, digite \textbf{cd} seguido do nome do diretório.
 \item Para sair do diretório atual, utilize o comando \textbf{cd ..}
 \end{itemize}
+\end{block}
 
 \pause
-\vspace{5pt}
 \begin{enumerate}
 \item Entre no diretório \textbf{Spoon-Knife}.
 \item Verifique a configuração do diretório remoto com o comando \textbf{git remote -v}.
@@ -672,9 +689,25 @@ Existem 4 estados em que um arquivo de trabalho local pode estar. Estes estados 
 
 \end{frame}
 
-%\begin{frame}{Criando um repositório}
-%svnadmin
-%\end{frame}
+\subsection{Clientes gráficos}
+
+\begin{frame}{Clientes gráficos}
+
+\begin{center}
+\href{https://tortoisesvn.net/}{\includegraphics[height=60pt]{img/tortoisesvn.png}}
+\hspace{20pt}
+\href{http://rabbitvcs.org/}{\includegraphics[height=60pt]{img/rabbitvcs.png}}
+\end{center}
+\pause
+
+\vspace{10pt}
+Sobre o RabbitVCS:
+\begin{itemize}
+\item Cliente gráfico para SVN e Git integrado ao Nautilus (Linux) e Finder (MAC OS).
+\item Inspirado no TortoiseSVN (Windows).
+\end{itemize}
+
+\end{frame}
 
 \subsection{RiouxSVN}
 
@@ -696,30 +729,6 @@ Vamos começar a trabalhar em equipe!
 \begin{block}{Dica}
 Utilize o comando \textbf{svn status} com frequência para saber como está sua cópia local. Os comandos \textbf{svn info} e \textbf{svn log} também ajudam a ter o controle do que está sendo feito.
 \end{block}
-
-\end{frame}
-
-\subsection{Clientes gráficos}
-
-\begin{frame}{Clientes gráficos}
-
-\begin{center}
-\href{https://tortoisesvn.net/}{\includegraphics[height=60pt]{img/tortoisesvn.png}}
-\hspace{20pt}
-\href{http://rabbitvcs.org/}{\includegraphics[height=60pt]{img/rabbitvcs.png}}
-\end{center}
-\pause
-
-\vspace{10pt}
-Sobre o RabbitVCS:
-\begin{itemize}
-\item Cliente gráfico para SVN e Git integrado ao Nautilus (Linux) e Finder (MAC OS).
-\item Inspirado no TortoiseSVN (Windows).
-\end{itemize}
-\pause
-
-\vspace{10pt}
-Vamos aprender mais na prática!
 
 \end{frame}
 
